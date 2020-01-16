@@ -25,8 +25,7 @@ print(ocr_core('images/google.png'))
 
 
 
-
-
+'''
 # Keep count of each kind of book that's being shelved into respective areas 
 category_Count = {
 	'gen_stacks': 0,
@@ -38,3 +37,4 @@ category_Count = {
 }
 
 print('Category Count Object: ', category_Count);
+'''
