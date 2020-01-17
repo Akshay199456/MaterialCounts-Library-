@@ -1,17 +1,25 @@
 import os
 
 from flask import Flask, render_template, request
-
 # Importing OCR function from ocr_core.py
 from ocr_core import ocr_core
+# Importing secure_filename
+from werkzeug.utils import secure_filename
+
+
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+print('Application root: ', APP_ROOT)
 
 # Defining a folder to store and later serve the images
-UPLOAD_FOLDER = '/static/uploads/'
+UPLOAD_LOCATION = '/uploads'
+UPLOAD_FOLDER = os.path.join(APP_ROOT, UPLOAD_LOCATION)
 
 # Allowing files of a specific type
 ALLOWED_EXTENSIONS = set(['png', 'jpeg', 'jpg'])
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Function to check the file extension
 def allowed_file(filename):
@@ -40,6 +48,11 @@ def upload_page():
 
 			# Call the OCR function on it
 			extracted_text = ocr_core(file)
+
+			# Secures filename before storing it in the system
+			filename = secure_filename(file.filename)
+			print("File path: ", os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
 			#  Extract the text and display it
 			return render_template('upload.html',
